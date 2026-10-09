@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Toubib — Plateforme de rendez-vous médicaux</title>
+  <meta name="description" content="Toubib : plateforme de prise de rendez-vous médicaux composée d'une API Symfony et de deux applications React. Projet du Titre Professionnel Développeur Web et Web Mobile." />
+  <style>
+    :root {
+      --bg: #f6f8fb;
+      --surface: #ffffff;
+      --text: #1f2937;
+      --muted: #5b6574;
+      --border: #dde3ea;
+      --accent: #1e3a5f;
+      --accent-soft: #e8f0fb;
+      --api: #0f6b4c;   --api-soft: #e6f5ef;
+      --front: #4b43a8; --front-soft: #efedfb;
+      --bo: #a23d17;    --bo-soft: #fcece6;
+      --radius: 14px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #11151b;
+        --surface: #1a2029;
+        --text: #e6e9ee;
+        --muted: #a3acb9;
+        --border: #2c3542;
+        --accent: #9cc2f0;
+        --accent-soft: #1d2a3b;
+        --api: #6fd3ad;   --api-soft: #15302a;
+        --front: #b9b4ee; --front-soft: #25233f;
+        --bo: #f0a487;    --bo-soft: #3a2219;
+      }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      line-height: 1.6;
+    }
+    a { color: inherit; }
+    a:focus-visible, .btn:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+    .container { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+    header { padding: 72px 0 48px; }
+    .tag {
+      display: inline-block; font-size: .85rem; font-weight: 600;
+      color: var(--accent); background: var(--accent-soft);
+      padding: 4px 12px; border-radius: 999px; margin-bottom: 18px;
+    }
+    h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); line-height: 1.1; margin: 0 0 16px; letter-spacing: -0.02em; }
+    .lead { font-size: 1.15rem; color: var(--muted); max-width: 680px; margin: 0; }
+
+    h2 { font-size: 1.5rem; margin: 0 0 8px; }
+    .section { padding: 32px 0; }
+    .section-intro { color: var(--muted); margin: 0 0 24px; max-width: 720px; }
+
+    .grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 768px)  { .grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (min-width: 1024px) { .grid { grid-template-columns: repeat(3, 1fr); } }
+
+    .card {
+      display: flex; flex-direction: column;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 24px;
+      border-top: 4px solid var(--c);
+    }
+    .card.api   { --c: var(--api);   --c-soft: var(--api-soft); }
+    .card.front { --c: var(--front); --c-soft: var(--front-soft); }
+    .card.bo    { --c: var(--bo);    --c-soft: var(--bo-soft); }
+    .card-label { font-size: .8rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--c); }
+    .card h3 { font-size: 1.35rem; margin: 6px 0 10px; }
+    .card p { color: var(--muted); margin: 0 0 16px; }
+    .card ul { margin: 0 0 18px; padding-left: 18px; color: var(--muted); }
+    .card li { margin-bottom: 4px; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 20px; align-items: center; justify-content: center; }
+    .chip {
+      font-size: .8rem; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+      background: var(--c-soft); color: var(--c);
+    }
+    .btn {
+      margin-top: auto; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      min-height: 44px; padding: 10px 16px; border-radius: 10px;
+      background: var(--c); color: var(--surface); font-weight: 600; text-decoration: none;
+    }
+    .btn:hover { filter: brightness(1.08); }
+
+    .archi {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 24px; display: grid; gap: 16px; grid-template-columns: 1fr;
+    }
+    @media (min-width: 768px) { .archi { grid-template-columns: repeat(3, 1fr); } }
+    .archi div { padding: 4px 0; }
+    .archi strong { display: block; margin-bottom: 4px; }
+    .archi span { color: var(--muted); font-size: .95rem; }
+
+    .logos { display: flex; gap: 12px; margin-bottom: 14px; align-items: center; justify-content: center; }
+    .logos img { width: 40px; height: 40px; object-fit: contain; }
+    @media (prefers-color-scheme: dark) { .logos img.mono { filter: invert(1); } }
+    .stack { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow-x: auto; }
+    .stack table { width: 100%; border-collapse: collapse; font-size: .95rem; }
+    .stack th, .stack td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    .stack th { color: var(--muted); font-size: .8rem; text-transform: uppercase; letter-spacing: .04em; }
+    .stack tr:last-child td { border-bottom: 0; }
+    .stack td:first-child { font-weight: 700; white-space: nowrap; }
+    footer { border-top: 1px solid var(--border); margin-top: 48px; padding: 28px 0 40px; color: var(--muted); font-size: .9rem; }
+    footer p { margin: 4px 0; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1>Toubib</h1>
+      <p class="lead">
+        Une plateforme de prise de rendez-vous médicaux en ligne qui met en relation patients et médecins.
+        Le patient trouve un praticien et réserve un créneau en quelques clics ; le médecin gère ses cabinets,
+        son agenda et ses patients.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <section class="section" aria-labelledby="repos-title">
+      <div class="container">
+        <h2 id="repos-title">Les trois applications</h2>
+        <p class="section-intro">
+          Le projet est découpé en trois applications indépendantes, chacune dans son propre dépôt
+          et déployable séparément avec Docker.
+        </p>
+
+        <div class="grid">
+          <article class="card api">
+            <span class="card-label">Back-end</span>
+            <h3>ToubibAPI</h3>
+			<div class="logos">
+				<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/icons/php/php-original.svg" alt="PHP (logo)" title="PHP" width="40" height="40" />
+				<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/icons/symfony/symfony-original.svg" alt="Symfony (logo)" title="Symfony" width="40" height="40" class="mono" />
+			</div>
+            <div class="chips" aria-label="Technologies">
+				<span class="chip">MySQL 8</span>
+				<span class="chip">Redis</span>
+				<span class="chip">LexikJWT</span>
+            </div>
+            <a class="btn" id="link-api" href="#">Voir le dépôt ToubibAPI</a>
+          </article>
+
+          <article class="card front">
+            <span class="card-label">Application patient</span>
+            <h3>Toubib</h3>			
+            <div class="logos">
+				<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/icons/react/react-original.svg" alt="React (logo)" title="React" width="40" height="40" />
+				<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/icons/vitejs/vitejs-original.svg" alt="Vite (logo)" title="Vite" width="40" height="40" />
+			</div>
+            <div class="chips" aria-label="Technologies">
+				<span class="chip">React Router 7</span>
+				<span class="chip">Tailwind CSS 4</span>
+            </div>
+            <a class="btn" id="link-front" href="#">Voir le dépôt Toubib</a>
+          </article>
+
+          <article class="card bo">
+            <span class="card-label">Back-office</span>
+            <h3>ToubibBO</h3>
+            <div class="logos">
+				<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/icons/react/react-original.svg" alt="React (logo)" title="React" width="40" height="40" />
+				<img src="https://cdn.jsdelivr.net/gh/devicons/devicon@2.17.0/icons/vitejs/vitejs-original.svg" alt="Vite (logo)" title="Vite" width="40" height="40" />
+			</div>
+            <div class="chips" aria-label="Technologies">
+				<span class="chip">Tailwind CSS 4</span>
+				<span class="chip">FullCalendar</span>
+				<span class="chip">TanStack Table</span>
+            </div>
+            <a class="btn" id="link-bo" href="#">Voir le dépôt ToubibBO</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="stack-title">
+      <div class="container">
+        <h2 id="stack-title">Stack technique</h2>
+        <p class="section-intro">Chaque application s'exécute dans son propre conteneur Docker et est servie par Nginx.</p>
+        <div class="stack">
+          <table>
+            <thead><tr><th scope="col">Application</th><th scope="col">Rôle</th><th scope="col">Technologies</th></tr></thead>
+            <tbody>
+              <tr><td>ToubibAPI</td><td>API REST, logique métier et accès aux données</td><td>PHP 8.4, Symfony 8, Doctrine ORM 3, MySQL 8, Redis 7, LexikJWT, Nelmio CORS, Nginx</td></tr>
+              <tr><td>Toubib</td><td>Application web patient</td><td>React 19, Vite 7, React Router 7, Tailwind CSS 4, Nginx</td></tr>
+              <tr><td>ToubibBO</td><td>Application web médecin et administrateur</td><td>React 19, Vite 7, React Router 7, Tailwind CSS 4, FullCalendar, TanStack Table, Nginx</td></tr>
+            </tbody>
+          </table>
+        </div>
+		
+		<h2 id="repos-title">Installation requirement</h2>
+          <ul>
+			<li>Docker</li>
+			<li>Make (GnuWin32.make)</li>
+			<li>les trois repositories</li>
+		  </ul>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="archi-title">
+      <div class="container">
+        <h2 id="archi-title">Architecture</h2>
+        <p class="section-intro">
+          Les deux interfaces n'embarquent aucune logique métier : elles affichent les données et transmettent
+          les actions de l'utilisateur à l'API, qui fait seule foi.
+        </p>
+        <div class="archi">
+          <div><strong>Interfaces React</strong><span>Applications monopages, échanges en JSON, cookies HttpOnly.</span></div>
+          <div><strong>API Symfony</strong><span>Routes REST sous <code>/api/</code>, DTO validés, contrôle des droits.</span></div>
+          <div><strong>Stockage</strong><span>MySQL pour les données, Redis pour les tâches asynchrones, serveur de fichiers dédié.</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>Projet réalisé par <strong>Yassine ECHCHOUROUQ</strong> — Titre Professionnel Développeur Web et Web Mobile.</p>
+      <p><a id="link-profile" href="#">Profil GitHub</a></p>
+    </div>
+  </footer>
+
+  <script>
+    const GITHUB_USER = "4nTii";
+    const REPOS = {
+      "link-api": "toubibApi",
+      "link-front": "toubib",
+      "link-bo": "toubibBO",
+    };
+
+    for (const [id, repo] of Object.entries(REPOS)) {
+      const link = document.getElementById(id);
+      link.href = `https://github.com/${GITHUB_USER}/${repo}`;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+    }
+    document.getElementById("link-profile").href = `https://github.com/${GITHUB_USER}`;
+  </script>
+</body>
+</html>
