@@ -88,6 +88,12 @@
       background: var(--c); color: var(--surface); font-weight: 600; text-decoration: none;
     }
     .btn:hover { filter: brightness(1.08); }
+    .actions { margin-top: auto; display: flex; flex-direction: column; gap: 10px; }
+    .actions .btn { margin-top: 0; }
+    .btn.secondary { background: transparent; color: var(--c); border: 2px solid var(--c); }
+    .btn.secondary:hover { background: var(--c-soft); filter: none; }
+    .btn.disabled { background: transparent; color: var(--muted); border: 2px dashed var(--border); cursor: default; }
+    .btn.disabled:hover { filter: none; }
 
     .archi {
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
@@ -179,7 +185,10 @@
 				<span class="chip">Redis</span>
 				<span class="chip">LexikJWT</span>
             </div>
-            <a class="btn" id="link-api" href="#">Voir le dépôt ToubibAPI</a>
+            <div class="actions">
+              <a class="btn" id="link-api" href="#">Voir le dépôt ToubibAPI</a>
+              <a class="btn secondary" href="https://toubib.byethost24.com/api/status" target="_blank" rel="noopener noreferrer">Tester l'API en ligne</a>
+            </div>
           </article>
 
           <article class="card front">
@@ -193,7 +202,10 @@
 				<span class="chip">React Router 7</span>
 				<span class="chip">Tailwind CSS 4</span>
             </div>
-            <a class="btn" id="link-front" href="#">Voir le dépôt Toubib</a>
+            <div class="actions">
+              <a class="btn" id="link-front" href="#">Voir le dépôt Toubib</a>
+              <a class="btn secondary" href="https://toubib.byethost24.com/" target="_blank" rel="noopener noreferrer">Voir l'application en ligne</a>
+            </div>
           </article>
 
           <article class="card bo">
@@ -208,7 +220,10 @@
 				<span class="chip">FullCalendar</span>
 				<span class="chip">TanStack Table</span>
             </div>
-            <a class="btn" id="link-bo" href="#">Voir le dépôt ToubibBO</a>
+            <div class="actions">
+              <a class="btn" id="link-bo" href="#">Voir le dépôt ToubibBO</a>
+              <span class="btn disabled" aria-disabled="true">Mise en ligne prochainement</span>
+            </div>
           </article>
         </div>
       </div>
